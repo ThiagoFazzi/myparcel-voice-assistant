@@ -1,0 +1,6 @@
+PrintIntent print my orders
+PrintIntent print order labels
+PrintIntent print orders of today
+PrintIntent print todays orders
+PrintIntent print shipment labels
+PrintIntent print delivery labels
