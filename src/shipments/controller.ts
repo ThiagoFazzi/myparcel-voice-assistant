@@ -38,7 +38,7 @@ export const registerShipment = (shipmentId, token) => {
         .patch(`${baseUrl}/shipments/${shipmentId}`)
         .set('Authorization', `${token.token_type} ${token.access_token}`)
         .set('Content-Type', 'application/vnd.api+json')
-        .send({register_at: 0})
+        .send()
         .then(result => { console.log(result.body.data.attributes.register_at)
             //.map(file => getContent(file.id, token))
         })
