@@ -22,7 +22,7 @@ export const getShipments = (token) => {
         .set('Authorization', `${token.token_type} ${token.access_token}`)
         .set('Content-Type', 'application/vnd.api+json')
         .then(result => { result.body.data
-            .map(shipment => registerShipment(shipment.id, token))
+            .map(shipment => registerShipment(shipment.id, shipment, token))
         })
         .catch(err => console.error(err))
 }
@@ -33,14 +33,24 @@ PATCH https://sandbox-api.myparcel.com/v1/shipments/{shipment_id}
 (To register with the carrier, patch the `register_at` property to `0`
 */
 
-export const registerShipment = (shipmentId, token) => {
+export const registerShipment = (shipmentId, shipment, token) => {
+    //console.log(token)
+    //console.log(shipmentId)
+    //console.log(shipment)
 
+    shipment.attributes.register_at = 0
+    const ship = {
+        data: shipment
+    }
+
+    console.log('resposta antes do server', ship)
+    
     request
-        .get(`${baseUrl}/shipments/${shipmentId}`)
+        .patch(`${baseUrl}/shipments/${shipmentId}`)
         .set('Authorization', `${token.token_type} ${token.access_token}`)
         .set('Content-Type', 'application/vnd.api+json')
-        //.send()
-        .then(result => { console.log(result.body.data.attributes.register_at)
+        .send(ship)
+        .then(result => { console.log('Resposta server',result.body.data)
             //.map(file => getContent(file.id, token))
         })
         .catch(err => console.error(err))
