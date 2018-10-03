@@ -1,7 +1,7 @@
 import {createKoaServer} from "routing-controllers"
 import * as Alexa from "alexa-sdk"
 import { getAccessToken } from './shipments/controller'
-import { Credential } from './shipments/credential'
+import { credentialKeys }  from './shipments/credential'
 
 
 
@@ -25,7 +25,7 @@ export class Handler{
 }
 
 //Start process to fetch Shipments from the myParcel.com API
-getAccessToken(Credential)
+getAccessToken(credentialKeys)
 
 
 const port = process.env.PORT || 4000

@@ -1,15 +1,16 @@
 //Write the request to API (authentication MyParcel API)
 
 import * as request from 'superagent'
+import { Credential } from './credential';
+
 
 const baseUrlAuth = 'https://sandbox-auth.myparcel.com/access-token'
-
 const baseUrl = 'https://sandbox-api.myparcel.com/v1'
 
-export const getAccessToken = (client) => {
+export const getAccessToken = (credentialKeys : Credential) => {
     request
         .post(baseUrlAuth)
-        .send(client)
+        .send(credentialKeys)
         .set('Content-Type', 'application/json')
         .then(result => getShipments(result.body))
         .catch(err => console.error(err))
@@ -35,10 +36,10 @@ PATCH https://sandbox-api.myparcel.com/v1/shipments/{shipment_id}
 export const registerShipment = (shipmentId, token) => {
 
     request
-        .patch(`${baseUrl}/shipments/${shipmentId}`)
+        .get(`${baseUrl}/shipments/${shipmentId}`)
         .set('Authorization', `${token.token_type} ${token.access_token}`)
         .set('Content-Type', 'application/vnd.api+json')
-        .send()
+        //.send()
         .then(result => { console.log(result.body.data.attributes.register_at)
             //.map(file => getContent(file.id, token))
         })

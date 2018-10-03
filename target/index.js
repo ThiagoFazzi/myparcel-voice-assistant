@@ -20,7 +20,7 @@ class Handler {
     }
 }
 exports.Handler = Handler;
-controller_1.getAccessToken(credential_1.Credential);
+controller_1.getAccessToken(credential_1.credentialKeys);
 const port = process.env.PORT || 4000;
 const app = routing_controllers_1.createKoaServer({});
 app.listen(port, () => console.log(`Listening on port ${port}`));
