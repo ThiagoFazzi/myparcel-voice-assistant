@@ -1,27 +1,84 @@
-//import {createKoaServer} from "routing-controllers"
-import * as Alexa from "alexa-sdk"
+//import * as Alexa from "alexa-sdk"
 import { getAccessToken } from './shipments/controller'
 import { credentialKeys }  from './shipments/credential'
 
+exports.handler = (event, context) => {
 
+  try {
 
-let handlers: Alexa.Handlers = {
-  "PrintIntent": function(){
-    let self: Alexa.Handler.this
-    let speechOutput = "I will send your order to the printer"
-    self.emit(":tellWithCard", speechOutput, "Print labels skill", speechOutput)
-  }
+    if (event.session.new) {
+      // New Session
+      console.log("NEW SESSION")
+    }
+
+    switch (event.request.type) {
+
+      case "LaunchRequest":
+        // Launch Request
+        console.log(`LAUNCH REQUEST`)
+        context.succeed(
+          generateResponse(
+            buildSpeechletResponse("Welcome to an Alexa Skill, this is running on a deployed lambda function", true),
+            {}
+          )
+        )
+        break;
+
+      case "IntentRequest":
+        // Intent Request
+        console.log(`INTENT REQUEST`)
+
+        switch(event.request.intent.name) {
+          case "PrintIntent":
+            context.succeed(
+            generateResponse(
+              buildSpeechletResponse("Let me fetch your orders", true),
+              {}
+            )
+          )
+          break;
+            
+          default:
+            throw "Invalid intent"
+        }
+
+        break;
+
+      case "SessionEndedRequest":
+        // Session Ended Request
+        console.log(`SESSION ENDED REQUEST`)
+        break;
+
+      default:
+        context.fail(`INVALID REQUEST TYPE: ${event.request.type}`)
+
+    }
+
+  } catch(error) { context.fail(`Exception: ${error}`) }
+
 }
 
-//callback: Function)
+// Helpers
+const buildSpeechletResponse = (outputText, shouldEndSession) => {
 
-export class Handler{
-  constructor(event: Alexa.RequestBody, context: Alexa.context){
-    let alexa = Alexa.handler(event, context)
-    alexa.appId = "amzn1.ask.skill.e6a75a63-e5de-4635-9b68-78ec50af116f"
-    alexa.registerHandlers(handlers)
-    alexa.execute()
+  return {
+    outputSpeech: {
+      type: "PlainText",
+      text: outputText
+    },
+    shouldEndSession: shouldEndSession
   }
+
+}
+
+const generateResponse = (speechletResponse, sessionAttributes) => {
+
+  return {
+    version: "1.0",
+    sessionAttributes: sessionAttributes,
+    response: speechletResponse
+  }
+
 }
 
 //Start process to fetch Shipments from the myParcel.com API
