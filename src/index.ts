@@ -1,4 +1,4 @@
-import {createKoaServer} from "routing-controllers"
+//import {createKoaServer} from "routing-controllers"
 import * as Alexa from "alexa-sdk"
 import { getAccessToken } from './shipments/controller'
 import { credentialKeys }  from './shipments/credential'
@@ -28,9 +28,9 @@ export class Handler{
 getAccessToken(credentialKeys)
 
 
-const port = process.env.PORT || 4000
+//const port = process.env.PORT || 4000
 
-const app = createKoaServer({
-})
+//const app = createKoaServer({
+//})
 
-app.listen(port, () => console.log(`Listening on port ${port}`))
+//app.listen(port, () => console.log(`Listening on port ${port}`))

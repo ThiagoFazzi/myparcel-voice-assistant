@@ -1,6 +1,5 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const routing_controllers_1 = require("routing-controllers");
 const Alexa = require("alexa-sdk");
 const controller_1 = require("./shipments/controller");
 const credential_1 = require("./shipments/credential");
@@ -21,7 +20,4 @@ class Handler {
 }
 exports.Handler = Handler;
 controller_1.getAccessToken(credential_1.credentialKeys);
-const port = process.env.PORT || 4000;
-const app = routing_controllers_1.createKoaServer({});
-app.listen(port, () => console.log(`Listening on port ${port}`));
 //# sourceMappingURL=index.js.map
