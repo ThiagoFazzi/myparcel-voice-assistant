@@ -1,5 +1,8 @@
 import {createKoaServer} from "routing-controllers"
 import * as Alexa from "alexa-sdk"
+import { getAccessToken } from './shipments/controller'
+
+
 
 let handlers: Alexa.Handlers = {
   "PrintIntent": function(){
@@ -21,6 +24,18 @@ export class Handler{
 }
 
 
+//myParcel.com credentials
+
+const client = 
+{
+  "grant_type": "client_credentials",
+  "client_id": "5eb32787-07db-4898-91e4-68b1b24d6a1a",
+  "client_secret": "iah2Vg1uI6Q3i45Tq7UmjnA2J1Sse329bVRnVOE66ETk73ninmhYRac4RPng4KIy",
+  "scope": "*"
+}
+
+
+getAccessToken(client)
 
 
 const port = process.env.PORT || 4000
