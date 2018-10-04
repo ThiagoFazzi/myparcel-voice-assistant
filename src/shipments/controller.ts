@@ -1,34 +1,55 @@
-//Write the request to API (authentication MyParcel API)
-
 import Axios from 'axios'
 import * as request from 'superagent'
 import { Credential } from './credential';
-import * as fs from 'fs'
-import { printStreamPDF } from '../lib/printer'
 
+import { 
+  printPDFBuffer 
+} from '../lib/printer'
 
-const baseUrlAuth = 'https://sandbox-auth.myparcel.com/access-token'
-const baseUrl = 'https://sandbox-api.myparcel.com/v1'
-const baseUrlFile = 'https://sandbox-api.myparcel.com/v1'
+import {
+  BASE_URL,
+  BASE_URL_AUTH,
+  BASE_URL_FILES,
+  CREDENTIALS
+} from '../lib/common'
 
+const AxiosAuth = async () => Axios.create({
+  baseURL: BASE_URL,
+  headers: {
+    Authorization: await Axios.post(BASE_URL_AUTH, CREDENTIALS).then(resp => `${resp.data.token_type} ${resp.data.access_token}`),
+    Accept: 'application/vnd.api+json',
+    ContentType: 'application/vnd.api+json'
+  }
+})
 
 export const getAccessToken = (credentialKeys: Credential) => {
   request
-    .post(baseUrlAuth)
+    .post(BASE_URL_AUTH)
     .send(credentialKeys)
     .set('Content-Type', 'application/json')
     .then(result => getShipments(result.body))
     .catch(err => console.error(err))
 }
 
+export const getShipments2 = (axios) => {
+  axios
+    .get(`${BASE_URL}/shipments?filter[search]=2018-10-01&include=shipment_status`)
+    .then(result => {
+      result.data
+        .map(shipment => registerShipment)
+    })
+    .catch(err => console.error(err))
+
+}
+
 export const getShipments = (token) => {
   request
-    .get(`${baseUrl}/shipments?filter[search]=2018-10-01&include=shipment_status`)
+    .get(`${BASE_URL}/shipments?filter[search]=2018-10-01&include=shipment_status`)
     .set('Authorization', `${token.token_type} ${token.access_token}`)
     .set('Content-Type', 'application/vnd.api+json')
     .then(result => {
       result.body.data
-      .map(shipment => registerShipment(shipment.id, shipment, token))
+        .map(shipment => registerShipment(shipment.id, shipment, token))
     })
     .catch(err => console.error(err))
 }
@@ -53,7 +74,7 @@ export const registerShipment = (shipmentId, shipment, token) => {
   //console.log('object before send', ship)
 
   request
-    .patch(`${baseUrl}/shipments/${shipmentId}`)
+    .patch(`${BASE_URL}/shipments/${shipmentId}`)
     .set('Authorization', `${token.token_type} ${token.access_token}`)
     .set('Content-Type', 'application/vnd.api+json')
     .send(ship)
@@ -64,20 +85,19 @@ export const registerShipment = (shipmentId, shipment, token) => {
 export const getFile = (shipmentId, token) => {
 
   request
-    .get(`${baseUrl}/shipments/${shipmentId}/files`)
+    .get(`${BASE_URL}/shipments/${shipmentId}/files`)
     .set('Authorization', `${token.token_type} ${token.access_token}`)
     .set('Content-Type', 'application/vnd.api+json')
     .then(result => {
       result.body.data
-      .map(file => getContent(file.id, token))
+        .map(file => getContent(file.id, token))
     })
     .catch(err => console.error(err))
 }
 
 
 export const getContent = (fileId, token) => {
-  console.log(`${baseUrlFile}/files/${fileId}`)
-  Axios.get(`${baseUrlFile}/files/${fileId}`, {
+  Axios.get(`${BASE_URL_FILES}/files/${fileId}`, {
     responseType: 'arraybuffer',
     headers: {
       Authorization: `${token.token_type} ${token.access_token}`,
@@ -85,7 +105,7 @@ export const getContent = (fileId, token) => {
       Accept: 'application/pdf',
     }
   }).then(response => {
-    console.log(response.data)
+    //console.log(response.data)
     //printStreamPDF(Buffer.from(response.data, 'base64'))
 
 
@@ -111,6 +131,10 @@ export const showFileContent = (data) => {
   console.log(data)
 }
 
+
+AxiosAuth().then(axios => {
+
+})
 
 
 /*
