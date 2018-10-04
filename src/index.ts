@@ -1,34 +1,38 @@
 //import * as Alexa from "alexa-sdk"
 import { getAccessToken } from './shipments/controller'
 import { credentialKeys }  from './shipments/credential'
+import * as request from 'superagent'
+// import {printPDF} from './lib/printer'   UNCOMMENT THIS
+// import axois from 'Axios'                UNCOMMENT THIS
 
 
-exports.handler = (event, context) => {
+//const file = './labels/testlabel.pdf'     UNCOMMENT THIS
+//printPDF(file) // comment out to avoid wasting paper.
+
+exports.handler = async (event, context) => {
 
   try {
 
     if (event.session.new) {
-      // New Session
-      console.log("NEW SESSION")
     }
 
     switch (event.request.type) {
 
       case "LaunchRequest":
-        // Launch Request
-        console.log(`LAUNCH REQUEST`)
+
+      let result = await request
+      .get("https://swapi.co/api/people/1/")
+      .then(result => result.body.data.name)
+      .catch(err => console.error(err))
         context.succeed(
           generateResponse(
-            buildSpeechletResponse("Welcome to an Alexa Skill, this is running on a deployed lambda function", true),
+            buildSpeechletResponse(`${result}`, true),
             {}
           )
         )
         break;
 
       case "IntentRequest":
-        // Intent Request
-        console.log(`INTENT REQUEST`)
-
         switch(event.request.intent.name) {
           case "PrintIntent":
             context.succeed(
@@ -46,8 +50,6 @@ exports.handler = (event, context) => {
         break;
 
       case "SessionEndedRequest":
-        // Session Ended Request
-        console.log(`SESSION ENDED REQUEST`)
         break;
 
       default:
@@ -86,9 +88,3 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
 getAccessToken(credentialKeys)
 
 
-//const port = process.env.PORT || 4000
-
-//const app = createKoaServer({
-//})
-
-//app.listen(port, () => console.log(`Listening on port ${port}`))
