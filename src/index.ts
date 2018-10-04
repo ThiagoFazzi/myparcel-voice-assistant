@@ -1,8 +1,6 @@
+//import * as Alexa from "alexa-sdk"
 import { getAccessToken } from './shipments/controller'
 import { credentialKeys }  from './shipments/credential'
-
-//Start process to fetch Shipments from the myParcel.com API
-getAccessToken(credentialKeys)
 
 
 exports.handler = (event, context) => {
@@ -83,3 +81,14 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
   }
 
 }
+
+//Start process to fetch Shipments from the myParcel.com API
+getAccessToken(credentialKeys)
+
+
+//const port = process.env.PORT || 4000
+
+//const app = createKoaServer({
+//})
+
+//app.listen(port, () => console.log(`Listening on port ${port}`))
