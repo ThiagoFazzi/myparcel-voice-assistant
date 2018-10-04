@@ -83,7 +83,7 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
 
 //Start process to fetch Shipments from the myParcel.com API
 getAccessToken(credentialKeys)
-
+//showFileContent()
 
 //const port = process.env.PORT || 4000
 

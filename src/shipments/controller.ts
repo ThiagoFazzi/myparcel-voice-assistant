@@ -4,6 +4,8 @@ import Axios from 'axios'
 import * as request from 'superagent'
 import { Credential } from './credential';
 import * as fs from 'fs'
+//import Blob from 'blob'
+const PDFDocument = require ('pdfkit')
 
 
 const baseUrlAuth = 'https://sandbox-auth.myparcel.com/access-token'
@@ -78,17 +80,32 @@ export const getContent = (fileId,token) => {
             Authorization: `${token.token_type} ${token.access_token}`,
             ContentType: 'application/pdf',
             Accept: 'application/pdf',
-            responseType: 'arraybuffer'
+            responseType: 'stream'
 
-    }}).then(response => {
-        //console.log(new Buffer(response.data, 'binary').toString('base64'))
-        fs.writeFile("./test3.pdf", response.data, function(err) {
-            if(err) {
-                return console.log(err);
-            }
-         
-         });
-    })
+    }}).then(response => { console.log(response.data)
+        //fs.createWriteStream('testA.pdf', response.data)
+        let writeStream = fs.createWriteStream('secret.pdf');
+
+        // write some data with a base64 encoding
+        writeStream.write('aef35ghhjdk74hja83ksnfjk888sfsf', 'binary');
+
+        // the finish event is emitted when all data has been flushed from the stream
+        writeStream.on('finish', () => {  
+            console.log('wrote all data to file');
+        });
+
+        // close the stream
+        writeStream.end();  
+
+})
+    
+
+
+
+
+
+
+
     /*//request
     //    .get(`${baseUrlFile}/files/${fileId}`)
     //    .set('Authorization', `${token.token_type} ${token.access_token}`)
@@ -104,9 +121,7 @@ export const getContent = (fileId,token) => {
 
 
 
-export const showFileContent = (data) =>  {
-   console.log(data)
-}
+
 
 
 
