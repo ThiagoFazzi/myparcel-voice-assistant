@@ -4,7 +4,6 @@ export const PRINTER_IPP = 'http://' + PRINTER_HOST + '/printers/' + PRINTER_NAM
 
 export const BASE_URL = 'https://sandbox-api.myparcel.com/v1'
 export const BASE_URL_AUTH = 'https://sandbox-auth.myparcel.com/access-token'
-export const BASE_URL_FILES = 'https://sandbox-api.myparcel.com/v1'
 
 export const CREDENTIALS = {
   "grant_type": "client_credentials",

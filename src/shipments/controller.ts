@@ -9,7 +9,6 @@ import {
 import {
   BASE_URL,
   BASE_URL_AUTH,
-  BASE_URL_FILES,
   CREDENTIALS
 } from '../lib/common'
 
@@ -97,7 +96,7 @@ export const getFile = (shipmentId, token) => {
 
 
 export const getContent = (fileId, token) => {
-  Axios.get(`${BASE_URL_FILES}/files/${fileId}`, {
+  Axios.get(`${BASE_URL}/files/${fileId}`, {
     responseType: 'arraybuffer',
     headers: {
       Authorization: `${token.token_type} ${token.access_token}`,
