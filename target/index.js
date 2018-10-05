@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const controller_1 = require("./shipments/controller");
-const credential_1 = require("./shipments/credential");
+require('./shipments/controller');
 exports.handler = (event, context) => {
     try {
         if (event.session.new) {
@@ -49,5 +48,4 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
         response: speechletResponse
     };
 };
-controller_1.getAccessToken(credential_1.credentialKeys);
 //# sourceMappingURL=index.js.map

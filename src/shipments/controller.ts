@@ -1,11 +1,10 @@
 //Write the request to API (authentication MyParcel API)
 
-import Axios from 'axios' 
+import Axios from 'axios'
 import * as request from 'superagent'
 import { Credential } from './credential';
 import * as fs from 'fs'
-//import Blob from 'blob'
-const PDFDocument = require ('pdfkit')
+//import { printStreamPDF } from '../lib/printer'
 
 
 const baseUrlAuth = 'https://sandbox-auth.myparcel.com/access-token'
@@ -13,25 +12,62 @@ const baseUrl = 'https://sandbox-api.myparcel.com/v1'
 const baseUrlFile = 'https://sandbox-api.myparcel.com/v1'
 
 
-export const getAccessToken = (credentialKeys : Credential) => {
-    request
-        .post(baseUrlAuth)
-        .send(credentialKeys)
-        .set('Content-Type', 'application/json')
-        .then(result => getShipments(result.body))
-        .catch(err => console.error(err))
+/*
+export const getAccessToken = (credentialKeys: Credential) => {
+  request
+    .post(baseUrlAuth)
+    .send(credentialKeys)
+    .set('Content-Type', 'application/json')
+    .then(result => getShipments(result.body))
+    .catch(err => console.error(err))
 }
+*/
 
+
+
+const AxiosAuth = Promise.resolve(resolve => {
+   Axios.post(baseUrlAuth, {
+  "grant_type": "client_credentials",
+  "client_id": "5eb32787-07db-4898-91e4-68b1b24d6a1a",
+  "client_secret": "iah2Vg1uI6Q3i45Tq7UmjnA2J1Sse329bVRnVOE66ETk73ninmhYRac4RPng4KIy",
+  "scope": "*"
+  }, {
+    headers: {
+      ContentType: 'application/json'
+    }
+  }).then(resp => {
+    resolve(Axios.create({
+    baseURL: 'https://sandbox-api.myparcel.com/v1',
+    headers: {
+      Authorization: `${resp.data.token_type} ${resp.data.token.access_token}`,
+      Accept: 'application/vnd.api+json',
+      ContentType: 'application/vnd.api+json'
+    }
+  }))
+})
+
+
+console.log(AxiosAuth)
+
+
+/*
 export const getShipments = (token) => {
-    request
-        .get(`${baseUrl}/shipments?filter[search]=2018-10-01&include=shipment_status`)
-        .set('Authorization', `${token.token_type} ${token.access_token}`)
-        .set('Content-Type', 'application/vnd.api+json')
-        .then(result => { result.body.data
-            .map(shipment => registerShipment(shipment.id, shipment, token))
-        })
-        .catch(err => console.error(err))
+  Axios.get(`${baseUrl}/shipments?filter[search]=2018-10-01&include=shipment_status`, {
+    headers: {
+      Authorization: `${token.token_type} ${token.access_token}`,
+      Accept: 'application/vnd.api+json',
+      ContentType: 'application/vnd.api+json'
+    }
+  })
+  .then(resp => { resp.data.data
+    .map(shipment => registerShipment(shipment.id, shipment, token))
+  })
+  .catch(err => {
+    console.log(err)
+  })
 }
+*/
+
 
 /*
 2. Register the shipment with the carrier: 
@@ -40,88 +76,59 @@ PATCH https://sandbox-api.myparcel.com/v1/shipments/{shipment_id}
 */
 
 export const registerShipment = (shipmentId, shipment, token) => {
-    //console.log(token)
-    //console.log(shipmentId)
-    //console.log(shipment)
+  shipment.attributes.register_at = 0
 
-    shipment.attributes.register_at = 0
+  const ship = {
+    data: shipment
+  }
 
-    const ship = {
-        data: shipment
-    }
+  //console.log('object before send', ship)
 
-    //console.log('object before send', ship)
-    
-    request
-        .patch(`${baseUrl}/shipments/${shipmentId}`)
-        .set('Authorization', `${token.token_type} ${token.access_token}`)
-        .set('Content-Type', 'application/vnd.api+json')
-        .send(ship)
-        .then(result =>  getFile(result.body.data.id, token))
-        .catch(err => console.error(err))
+  request
+    .patch(`${baseUrl}/shipments/${shipmentId}`)
+    .set('Authorization', `${token.token_type} ${token.access_token}`)
+    .set('Content-Type', 'application/vnd.api+json')
+    .send(ship)
+    .then(result => getFile(result.body.data.id, token))
+    .catch(err => console.error(err))
 }
 
 export const getFile = (shipmentId, token) => {
 
-    request
-        .get(`${baseUrl}/shipments/${shipmentId}/files`)
-        .set('Authorization', `${token.token_type} ${token.access_token}`)
-        .set('Content-Type', 'application/vnd.api+json')
-        .then(result => { result.body.data
-            .map(file => getContent(file.id, token))
-        })
-        .catch(err => console.error(err))
+  request
+    .get(`${baseUrl}/shipments/${shipmentId}/files`)
+    .set('Authorization', `${token.token_type} ${token.access_token}`)
+    .set('Content-Type', 'application/vnd.api+json')
+    .then(result => {
+      result.body.data
+      .map(file => getContent(file.id, token))
+    })
+    .catch(err => console.error(err))
 }
 
 
-export const getContent = (fileId,token) => {
-    Axios.get(`${baseUrlFile}/files/${fileId}`, {
-        headers:{ 
-            Authorization: `${token.token_type} ${token.access_token}`,
-            ContentType: 'application/pdf',
-            Accept: 'application/pdf',
-            responseType: 'stream'
-
-    }}).then(response => { console.log(response.data)
-        //fs.createWriteStream('testA.pdf', response.data)
-        let writeStream = fs.createWriteStream('secret.pdf');
-
-        // write some data with a base64 encoding
-        writeStream.write('aef35ghhjdk74hja83ksnfjk888sfsf', 'binary');
-
-        // the finish event is emitted when all data has been flushed from the stream
-        writeStream.on('finish', () => {  
-            console.log('wrote all data to file');
-        });
-
-        // close the stream
-        writeStream.end();  
-
-})
-    
-
-
-
-
-
-
-
-    /*//request
-    //    .get(`${baseUrlFile}/files/${fileId}`)
-    //    .set('Authorization', `${token.token_type} ${token.access_token}`)
-    //    //.set('Content-Type', 'application/pdf')
-    //    .set('Accept', 'application/pdf')
-        .responseType('pdf')
-        //.buffer(true)
-        //.then(result => console.log(result.body))
-        .then(result => { console.log(result.body) })
-        .catch(err => console.error(err))*/
+export const getContent = (fileId, token) => {
+  console.log(`${baseUrlFile}/files/${fileId}`)
+  Axios.get(`${baseUrlFile}/files/${fileId}`, {
+    responseType: 'arraybuffer',
+    headers: {
+      Authorization: `${token.token_type} ${token.access_token}`,
+      Accept: 'application/pdf',
+    }
+  }).then(response => {
+    console.log(response.data)
+    //printStreamPDF(Buffer.from(response.data, 'base64'))
+  }).catch(err => {
+    console.log(err)
+  })
 }
 
 
 
 
-
+export const showFileContent = (data) => {
+  console.log(data)
+}
 
 
 
