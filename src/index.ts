@@ -5,7 +5,7 @@ import * as request from 'superagent'
 // import {printPDF} from './lib/printer'   UNCOMMENT THIS
 // import axois from 'Axios'                UNCOMMENT THIS
 
-
+require('./shipments/controller')
 //const file = './labels/testlabel.pdf'     UNCOMMENT THIS
 //printPDF(file) // comment out to avoid wasting paper.
 
