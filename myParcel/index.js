@@ -1,7 +1,7 @@
 //import * as Alexa from "alexa-sdk"
-//import { getAccessToken } from './shipments/controller'
-import { credentialKeys }  from './shipments/credential'
-import * as request from 'superagent'
+// import { getAccessToken } from './shipments/controller'
+// import { credentialKeys }  from './shipments/credential'
+// import * as request from 'superagent'
 // import {printPDF} from './lib/printer'   UNCOMMENT THIS
 // import axois from 'Axios'                UNCOMMENT THIS
 
@@ -84,7 +84,7 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
 
 }
 
-//Start process to fetch Shipments from the myParcel.com API
-//getAccessToken(credentialKeys)
-//showFileContent()
+// //Start process to fetch Shipments from the myParcel.com API
+// getAccessToken(credentialKeys)
+
 

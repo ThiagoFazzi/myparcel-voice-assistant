@@ -1,18 +1,26 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+<<<<<<< HEAD
 require('./shipments/controller');
+=======
+const controller_1 = require("./shipments/controller");
+const credential_1 = require("./shipments/credential");
+
+
+>>>>>>> 596b771e782ba3fadde048ea05bc16c983154b11
 exports.handler = (event, context) => {
     try {
         if (event.session.new) {
-            console.log("NEW SESSION");
         }
         switch (event.request.type) {
             case "LaunchRequest":
-                console.log(`LAUNCH REQUEST`);
-                context.succeed(generateResponse(buildSpeechletResponse("Welcome to an Alexa Skill, this is running on a deployed lambda function", true), {}));
+                let result = await request
+                    .get("https://swapi.co/api/people/1/")
+                    .then(result => result.body.data.name)
+                    .catch(err => console.error(err));
+                context.succeed(generateResponse(buildSpeechletResponse(`${result}`, true), {}));
                 break;
             case "IntentRequest":
-                console.log(`INTENT REQUEST`);
                 switch (event.request.intent.name) {
                     case "PrintIntent":
                         context.succeed(generateResponse(buildSpeechletResponse("Let me fetch your orders", true), {}));
@@ -22,7 +30,6 @@ exports.handler = (event, context) => {
                 }
                 break;
             case "SessionEndedRequest":
-                console.log(`SESSION ENDED REQUEST`);
                 break;
             default:
                 context.fail(`INVALID REQUEST TYPE: ${event.request.type}`);
