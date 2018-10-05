@@ -2,8 +2,9 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const controller_1 = require("./shipments/controller");
 const credential_1 = require("./shipments/credential");
-const request = require("superagent");
-exports.handler = async (event, context) => {
+
+
+exports.handler = (event, context) => {
     try {
         if (event.session.new) {
         }
