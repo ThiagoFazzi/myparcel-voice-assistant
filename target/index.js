@@ -2,19 +2,13 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const controller_1 = require("./shipments/controller");
 const credential_1 = require("./shipments/credential");
-
-
-exports.handler = (event, context) => {
+exports.handler = async (event, context) => {
     try {
         if (event.session.new) {
         }
         switch (event.request.type) {
             case "LaunchRequest":
-                let result = await request
-                    .get("https://swapi.co/api/people/1/")
-                    .then(result => result.body.data.name)
-                    .catch(err => console.error(err));
-                context.succeed(generateResponse(buildSpeechletResponse(`${result}`, true), {}));
+                context.succeed(generateResponse(buildSpeechletResponse(`Hello`, true), {}));
                 break;
             case "IntentRequest":
                 switch (event.request.intent.name) {
