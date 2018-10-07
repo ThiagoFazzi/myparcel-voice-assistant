@@ -1,7 +1,7 @@
 const Axios = require("axios")
 
 const PRINTER_NAME = 'DYMO_LabelWriter_4XL'
-const PRINTER_HOST = 'http://c384581d.ngrok.io'
+const PRINTER_HOST = 'https://myparcel.serveo.net'
 const PRINTER_IPP = 'http://' + PRINTER_HOST + '/printers/' + PRINTER_NAME
 
 const BASE_URL = 'https://sandbox-api.myparcel.com/v1'
@@ -23,8 +23,14 @@ const AxiosAuth = async () => Axios.create({
   }
 })
 
+const PrinterAuth = () => Axios.create({
+  baseURL: PRINTER_HOST
+})
+
 module.exports = {
   AxiosAuth,
+  PrinterAuth,
   BASE_URL,
   PRINTER_IPP
 }
+
