@@ -23,7 +23,7 @@ const AxiosAuth = async () => Axios.create({
   }
 })
 
-const PrinterAuth = () => Axios.create({
+const PrinterAuth = Axios.create({
   baseURL: PRINTER_HOST,
   timeout: 10000
 })

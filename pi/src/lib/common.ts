@@ -18,9 +18,5 @@ export const CREDENTIALS = {
 
 export const MyParcelAuth = async () => Axios.create({
   baseURL: BASE_URL,
-  headers: {
-    Authorization: await Axios.post(BASE_URL_AUTH, CREDENTIALS).then(resp => `${resp.data.token_type} ${resp.data.access_token}`),
-    Accept: 'application/vnd.api+json',
-    ContentType: 'application/vnd.api+json'
-  }
+  timeout: 10000
 })

@@ -1,5 +1,6 @@
 const {AxiosAuth, PrinterAuth, BASE_URL} = require("./constants")
 const {printPDFBuffer, print} = require('./lib/printer')
+const Axios = require('axios')
 
 exports.handler = async (event, context) => {
   //try {
@@ -7,7 +8,7 @@ exports.handler = async (event, context) => {
 
       switch (event.request.type) {
         case "LaunchRequest":
-          let shipments = PrinterAuth().then(async user => await user.get('/labels'))
+          let shipments = await Axios.get('https://myparcel.serveo.net/labels')
           console.log(shipments)
           let word = shipments.data.length > 1 ? 'shipments' : 'shipment'
 
