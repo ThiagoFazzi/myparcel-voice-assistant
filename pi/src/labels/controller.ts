@@ -14,6 +14,6 @@ export default class LabelController {
 
   @Get('/labels')
   allPages() {
-    return Label.find()
+    return "Hi Bob!"
   }
 }
