@@ -1,3 +1,5 @@
 node_modules
-
-/target
+public
+target
+myParcel/node_modules
+pi/node_modules
