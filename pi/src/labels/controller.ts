@@ -14,9 +14,9 @@ export default class LabelController {
   }
 
   @Get('/labels')
-  allPages(){
-    return MyParcelAuth().then(user => {
-      return user.get('/shipments?filter[search]=2018-10-05&include=shipment_status').then(resp => resp.data.length)
+  async allPages(){
+    return await MyParcelAuth().then(async user => {
+      return await user.get('/shipments?filter[search]=2018-10-05&include=shipment_status').then(resp => resp.data.length)
     })
   }
 }
