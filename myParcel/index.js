@@ -58,8 +58,9 @@ exports.handler = async (event, context) => {
       switch (event.request.type) {
         case "LaunchRequest":
           let numberOfLabels = await PrinterAuth.then(async user => await user.get('/labels'))
+          let word = numberOfLabels.length > 1 ? 'shipments' : 'shipment'
 
-          context.succeed(generateResponse(buildSpeechletResponse(`Welcome to MyParcel. You have ${numberOfLabels.length} for today` , true), {}))
+          context.succeed(generateResponse(buildSpeechletResponse(`Welcome to MyParcel. You have ${numberOfLabels.length + ' ' + word} scheduled for today` , true), {}))
         break;
 
         case "IntentRequest":
