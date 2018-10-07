@@ -24,7 +24,8 @@ const AxiosAuth = async () => Axios.create({
 })
 
 const PrinterAuth = () => Axios.create({
-  baseURL: PRINTER_HOST
+  baseURL: PRINTER_HOST,
+  timeout: 10000
 })
 
 module.exports = {

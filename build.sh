@@ -32,19 +32,19 @@ else
 fi
 
 echo "creating a new zip file"
-zip archive.zip *  -r -x -q .git/\* \*.sh tests/\* node_modules/aws-sdk/\* \*.zip
+zip archive.zip *  -r -x .git/\* \*.sh tests/\* node_modules/aws-sdk/\* \*.zip --quiet
 
 echo "Uploading $lambda to $region";
-
 aws lambda update-function-code --function-name $lambda --zip-file fileb://archive.zip --publish
 
 if [ $? -eq 0 ]; then
   echo "Upload successful!"
-  rm archive.zip;
 else 
   echo "Upload failed"
   echo "If the error was a 400, check that there are no slashes in your lambda name"
   echo "Lambda name = $lambda"
-  rm archive.zip;
   exit 1;
 fi
+
+rm archive.zip;
+echo "Removed zip file"
