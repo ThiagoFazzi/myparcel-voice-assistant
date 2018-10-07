@@ -1,7 +1,7 @@
 const Axios = require("axios")
 
 const PRINTER_NAME = 'DYMO_LabelWriter_4XL'
-const PRINTER_HOST = 'http://9c705e81.ngrok.io'
+const PRINTER_HOST = 'http://c384581d.ngrok.io'
 const PRINTER_IPP = 'http://' + PRINTER_HOST + '/printers/' + PRINTER_NAME
 
 const BASE_URL = 'https://sandbox-api.myparcel.com/v1'
