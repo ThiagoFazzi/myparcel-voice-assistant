@@ -5,7 +5,7 @@ import { snakeCase } from 'typeorm/util/StringUtils'
 
 import Label from './labels/entity'
 
-const DB_DSN = process.env.DATABASE_URL || 'postgres://myparcel:secret@localhost:5432/labels'
+const DB_DSN = process.env.DATABASE_URL || 'postgres://postgres:secret@localhost:5432/labels'
 
 class CustomNamingStrategy extends DefaultNamingStrategy implements NamingStrategyInterface {
 

@@ -3,12 +3,14 @@ import {createKoaServer} from "routing-controllers"
 import setupDb from './db'
 
 import LabelsController from './labels/controller'
+import PrintController from './prints/controller'
 
 const port = process.env.PORT || 4000
 
 const app = createKoaServer({
   controllers: [
-    LabelsController
+    LabelsController,
+    PrintController
   ],
 })
 
