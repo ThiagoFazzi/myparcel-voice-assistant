@@ -13,7 +13,7 @@ async function print(buffer, mime, name = 'Print job' ){
     data: buffer
   }
 
-  return await new Promise((resolve, reject) => {
+  return await new Promise((resolve) => {
     printer.execute("Print-Job", file, function (_, res) {
       resolve(res) // console.log(res.statusCode)
     })

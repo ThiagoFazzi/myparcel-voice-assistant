@@ -5,7 +5,7 @@
     "noImplicitAny": false,
     "noImplicitThis": true,
     "noUnusedLocals": false,
-    "noUnusedParameters": false,
+    "noUnusedParameters": true,
     "removeComments": true,
     "skipLibCheck": false,
     "sourceMap": true,
