@@ -94,19 +94,6 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
   }
 }
 
-const getContent = (axios, fileId) => {
-  return axios.get(`${BASE_URL}/files/${fileId}`, {
-    responseType: 'arraybuffer',
-    headers: {
-      Accept: 'application/pdf',
-      ContentType: 'application/pdf' 
-    }
-  })
-    //.then(response => console.log(response))
-    .then(response => { printPDFBuffer(Buffer.from(response.data, 'base64'))})
-    //.then(response => console.log('yes'))
-    .catch(err => console.log(err))
-}
 
 
 

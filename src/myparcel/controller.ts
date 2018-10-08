@@ -70,7 +70,7 @@ const createFiles  = async(date) => {
 
 export const  printLabels = (date) =>{
    return createFiles(date)
-    .then(resp => resp.data.length)
+    .then(resp => resp.length)
     .catch(err => console.log(err))
 }
 
