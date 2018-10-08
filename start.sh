@@ -1,7 +1,7 @@
 #!/bin/bash
 
 cd ~/myparcel-voice-assistant
-git pull origin pi-server
+git pull origin development
 yarn install
 x-terminal-emulator -e yarn compile
 x-terminal-emulator -e yarn start
