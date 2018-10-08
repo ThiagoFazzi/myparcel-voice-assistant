@@ -1,0 +1,12 @@
+{
+  "name": "my-parcel",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^0.18.0",
+    "ipp": "^2.0.1",
+    "mz": "^2.7.0",
+    "superagent": "^4.0.0-beta.5"
+  }
+}
