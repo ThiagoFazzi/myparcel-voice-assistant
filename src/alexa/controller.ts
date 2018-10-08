@@ -12,7 +12,7 @@ export default class AlexaController {
     ) {
         return printLabels(date)
         .then( resp => resp)
-  }
+    }
 
   @Get('/labels/count/:date')
   @HttpCode(200)
