@@ -34,14 +34,14 @@ export const registerShipment = (axios, shipment) => {
   }
   return axios
     .patch(`${BASE_URL}/shipments/${shipment.id}`,ship)
-    .then(response =>  response.data)
+    .then(response =>  response.data.data)
     .catch(err => console.error(err))
 }
 
-export const getFile = (axios, shipment) => {
+export const getFile = (axios, shipmentId) => {
   return axios
-    .get(`${BASE_URL}/shipments/${shipment}/files`)
-    .then(response =>  response.data)
+    .get(`${BASE_URL}/shipments/${shipmentId}/files`)
+    .then(response =>  response.data.data)
     .catch(err => console.error(err))
 }
 
@@ -52,7 +52,9 @@ export const getContent = (axios, fileId) => {
       ContentType: 'application/pdf' 
     }
   })
+    //.then(response => console.log(response))
     .then(response => { printPDFBuffer(Buffer.from(response.data, 'base64'))})
+    //.then(response => console.log('yes'))
     .catch(err => console.log(err))
 }
 
@@ -60,15 +62,32 @@ export const getContent = (axios, fileId) => {
 const createFiles  = async(date) => { 
   let axios  =  await AxiosAuth() 
   let shipments = await getShipments(axios, date)
+    .then(shipments => Promise.all(shipments.map(shipment => registerShipment(axios, shipment))))
+    .then(shipmentsRegistered => Promise.all(shipmentsRegistered.map(shipmentRegistered => getFile(axios, shipmentRegistered.id))))
+    .then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(shipmentFileId => getContent(axios, shipmentFileId.id)))))
+    //.then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(x => getContent(axios, x.id)))))
+   
+   
+    //.then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(shipmentFileId => console.log('resp', shipmentFileId.id)))))
+    .catch(error => console.log(error))
+
+
+  //let ids = shipments.map(ship => ship.id)
+  //let shipmentsRegistered = shipments.map(shipment => registerShipment(axios, shipment))
+  
+  //let labelsFiles = shipmentsRegistered.map(shipmentRegistered => getFile(axios, shipmentRegistered.id))
   //let shipmentsRegistered = await registerShipment(axios, shipments)
 
 
-  console.log('createFiles',shipments)
+  //console.log('createFiles', shipmentsRegistered)
+
+  //console.log('createFiles',ids)
+  //console.log('createFiles',shipments)
   return shipments
   
 }
 
-
+//Thiago check this function down here, i replaced getContent with console.log() but Printer Promise pending is still showing
 export const  printLabels = (date) =>{
    return createFiles(date)
     .then(labels => sendToPrinter(labels))
