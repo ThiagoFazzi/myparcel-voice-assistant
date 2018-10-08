@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import * as request from 'superagent'
 import { Credential } from './credential';
 
 import { 

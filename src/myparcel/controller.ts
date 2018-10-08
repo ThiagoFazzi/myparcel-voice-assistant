@@ -60,20 +60,17 @@ export const getContent = (axios, fileId) => {
 const createFiles  = async(date) => { 
   let axios  =  await AxiosAuth() 
   let shipments = await getShipments(axios, date)
+  //let shipmentsRegistered = await registerShipment(axios, shipments)
+
+
   console.log('createFiles',shipments)
   return shipments
-  //let shipmentsRegistered = await registerShipment(axios, shipments)
+  
 }
 
 
 export const  printLabels = (date) =>{
-  //return AxiosAuth()
-  //  .then(axios => getShipments(axios, date))
-  //  .then(shipments => shipments)
    return createFiles(date)
-  
-    //Logic to get files from myParcel.com
-
     .then(labels => sendToPrinter(labels))
     .then(resp => resp)
     .catch(err => console.log(err))
