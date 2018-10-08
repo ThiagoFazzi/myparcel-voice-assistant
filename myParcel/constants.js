@@ -14,6 +14,12 @@ const CREDENTIALS = {
   "scope": "*"
 }
 
+const PI_HOST = 'https://0d9abdfc.ngrok.io'
+
+const PiServer = async () => Axios.create({
+  baseURL: PI_HOST
+})
+
 const AxiosAuth = async () => Axios.create({
   baseURL: BASE_URL,
   headers: {
