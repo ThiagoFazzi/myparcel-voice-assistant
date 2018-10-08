@@ -8,4 +8,4 @@ x-terminal-emulator -e yarn start
 x-terminal-emulator -e autossh -M 0 -R myparcel.serveo.net:80:localhost:4000 serveo.net
 
 cd ~/
-x-terminal-emulator -e ngrok/ngork http 4001
+x-terminal-emulator -e ngrok/ngrok http 4001

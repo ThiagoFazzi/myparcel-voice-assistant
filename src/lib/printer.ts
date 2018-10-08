@@ -23,7 +23,7 @@ async function print(buffer, mime, name = 'Print job' ){
 export const printPDFFile = async (filename) => await print(await fs.readFile(filename), 'application/pdf', filename)
 export const printPDFBuffer = async (buffer) => await print(buffer, 'application/pdf')
 
-/*
+
 export async function printStreamPDF(stream){
   let printer = ipp.Printer(PRINTER_IPP)
 
@@ -39,4 +39,3 @@ export async function printStreamPDF(stream){
     return res // console.log(res.statusCode)
   })
 }
-*/

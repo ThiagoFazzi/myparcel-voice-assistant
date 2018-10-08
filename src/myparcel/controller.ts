@@ -47,6 +47,7 @@ export const getFile = (axios, shipmentId) => {
 
 export const getContent = (axios, fileId) => {
   return axios.get(`${BASE_URL}/files/${fileId}`, {
+    responseType: 'arraybuffer',
     headers: {
       Accept: 'application/pdf',
       ContentType: 'application/pdf' 
@@ -66,23 +67,7 @@ const createFiles  = async(date) => {
     .then(shipmentsRegistered => Promise.all(shipmentsRegistered.map(shipmentRegistered => getFile(axios, shipmentRegistered.id))))
     .then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(shipmentFileId => getContent(axios, shipmentFileId.id)))))
     //.then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(x => getContent(axios, x.id)))))
-   
-   
-    //.then(shipmentsFiles => Promise.all(shipmentsFiles.map(shipmentFile => shipmentFile.map(shipmentFileId => console.log('resp', shipmentFileId.id)))))
     .catch(error => console.log(error))
-
-
-  //let ids = shipments.map(ship => ship.id)
-  //let shipmentsRegistered = shipments.map(shipment => registerShipment(axios, shipment))
-  
-  //let labelsFiles = shipmentsRegistered.map(shipmentRegistered => getFile(axios, shipmentRegistered.id))
-  //let shipmentsRegistered = await registerShipment(axios, shipments)
-
-
-  //console.log('createFiles', shipmentsRegistered)
-
-  //console.log('createFiles',ids)
-  //console.log('createFiles',shipments)
   return shipments
   
 }
@@ -90,8 +75,9 @@ const createFiles  = async(date) => {
 //Thiago check this function down here, i replaced getContent with console.log() but Printer Promise pending is still showing
 export const  printLabels = (date) =>{
    return createFiles(date)
-    .then(labels => sendToPrinter(labels))
+    //.then(labels => sendToPrinter(labels))
     .then(resp => resp)
+    .then(() =>  Promise.resolve('LABELS PRINTED!!!!!'))
     .catch(err => console.log(err))
 }
 
