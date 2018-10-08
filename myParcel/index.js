@@ -19,14 +19,15 @@ exports.handler = async (event, context) => {
     await PiServer().then(async axios => {
       switch (event.request.type) {
         case "LaunchRequest": console.log('LaunchRequest')
+          axios.post('/labels/print/2018-10-05')
           await getShipmentsCount(axios)
             .then(resp => 
               say(context, `Hello, welcome to My Parcel. You have ${resp.data} shipment${parseInt(resp.data) > 1 ? 's' : ''} on today's list`))
             .catch(err => 
               say(context, `I'm sorry, I could not connect to the server`))
-
-
           break;
+
+          
   
         case "IntentRequest": console.log('IntentRequest')
           switch (event.request.intent.name) {
@@ -84,11 +85,18 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
   }
 }
 
-const getShipments = (axios, date) => {
-  return axios
-    .get(`/shipments?filter[search]=${date}&include=shipment_status`)
-    .then(response =>  response.data.data)
-    .catch(err => console.error(err))
+const getContent = (axios, fileId) => {
+  return axios.get(`${BASE_URL}/files/${fileId}`, {
+    responseType: 'arraybuffer',
+    headers: {
+      Accept: 'application/pdf',
+      ContentType: 'application/pdf' 
+    }
+  })
+    //.then(response => console.log(response))
+    .then(response => { printPDFBuffer(Buffer.from(response.data, 'base64'))})
+    //.then(response => console.log('yes'))
+    .catch(err => console.log(err))
 }
 
 let today = new Date()
