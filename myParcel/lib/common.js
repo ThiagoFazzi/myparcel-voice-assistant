@@ -1,11 +1,11 @@
 const Axios = require('axios')
 
-const PI_URL = 'https://3119c166.ngrok.io'
+const PI_URL = 'https://c3151774.ngrok.io'
 
 const PiServer = async () => Axios.create({
   baseURL: PI_URL,
   headers: {
-    Authorization: 'Bearer ' + Axios.post(PI_URL + '/logins', {
+    Authorization: 'Bearer ' + await Axios.post(PI_URL + '/logins', {
       email: 'milan@milan.com', 
       password: 'test1234'
     }).then(resp => resp.data.jwt)
