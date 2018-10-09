@@ -1,6 +1,30 @@
-PrintIntent print my orders
-PrintIntent print order labels
-PrintIntent print orders of today
-PrintIntent print todays orders
-PrintIntent print shipment labels
-PrintIntent print delivery labels
+Utterances for PrintIntent:
+
+ - print my orders
+ - print my labels
+ - print my shipments
+ - print labels of today
+ - print order labels
+ - print orders of today
+ - print shipment labels
+ - print delivery labels
+
+
+ Utterances for PrintByDateIntent:
+
+- print {timePeriod}
+- print labels of {timePeriod}
+- print orders of {timePeriod}
+- print {timePeriod} s orders
+
+
+Utterances for OrderCountIntent:
+
+- tell me the order count for {timePeriod}
+- to tell me how many orders I had on {timePeriod}
+- how many orders did I have on {timePeriod}
+- how many orders did I have on {timePeriod}
+- tell me how many orders we had on {timePeriod}
+
+
+* {timePeriod} is a slot which takes on AMAZON.DATE slot type
