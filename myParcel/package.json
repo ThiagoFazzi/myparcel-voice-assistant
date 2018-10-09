@@ -6,6 +6,7 @@
   "dependencies": {
     "axios": "^0.18.0",
     "ipp": "^2.0.1",
+    "moment": "^2.22.2",
     "mz": "^2.7.0",
     "superagent": "^4.0.0-beta.5"
   }
