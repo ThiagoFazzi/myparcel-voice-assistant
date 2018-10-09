@@ -13,8 +13,10 @@
     "@types/pg": "^7.4.10",
     "axios": "^0.18.0",
     "bcrypt": "^3.0.1",
+    "bcryptjs": "^2.4.3",
     "ipp": "^2.0.1",
     "jsonwebtoken": "^8.3.0",
+    "kcors": "^2.2.2",
     "koa": "^2.0.0-alpha.8",
     "koa-bodyparser": "^4.2.1",
     "koa-multer": "^1.0.2",
@@ -25,8 +27,7 @@
     "ts-node": "^7.0.1",
     "tsc": "^1.20150623.0",
     "typeorm": "^0.2.7",
-    "typescript": "^3.1.1",
-    "kcors": "^2.2.2"
+    "typescript": "^3.1.1"
   },
   "scripts": {
     "start": "nodemon",
