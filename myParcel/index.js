@@ -1,65 +1,85 @@
-const {AxiosAuth} = require("./constants")
+const {AxiosAuth, BASE_URL} = require("./constants")
+const {printPDFBuffer, print} = require('./lib/printer')
+const Axios = require('axios')
+
+const PI_HOST = 'https://3119c166.ngrok.io' || 'http://c377c715.ngrok.io'
+
+const PiServer = async () => Axios.create({
+  baseURL: PI_HOST
+})
+
+const say = (context, message) => context.succeed(generateResponse(buildSpeechletResponse(message, true)))
+
+let today = new Date()
+let day = today.getDate()
+let month = today.getMonth()
+let year = today.getFullYear()
+let fullDate = `${year}-${month+1}-${day}`
+
+const getShipmentsCount = async (axios, date) => axios.get('/labels/count/' + date)
 
 
 exports.handler = async (event, context) => {
 
   try {
+    await PiServer().then(async axios => {
+      switch (event.request.type) {
 
-    if (event.session.new) {
-    }
-    
-    await AxiosAuth().then(async axios => {
-    switch (event.request.type) {
+        case "LaunchRequest": console.log('LaunchRequest')
+          await getShipmentsCount(axios, fullDate)
+            .then(resp => 
+              say(context, `Hello, welcome to MyParcel.com. You have ${resp.data} shipment${parseInt(resp.data) > 1 ? 's' : ''} on today's list`))
+            .catch(err => 
+              say(context, `I'm sorry, I could not connect to the server`))
+          break;        
+  
+        case "IntentRequest": console.log('IntentRequest')
 
-      case "LaunchRequest":
+          switch (event.request.intent.name) {
+            case "PrintIntent": console.log('PrintIntent')
 
-      let result = await axios
-      .get(`/shipments?filter[search]=2018-10-05&include=shipment_status`)
-      .then(result => result.data.data)
-      .catch(err => console.error(err))
-      
-        context.succeed(
-          generateResponse(
-            buildSpeechletResponse(`Hello, welcome to My Parcel. You have ${result.length} shipments on today's list`, true),
-            {}
-            )
-          )
-        break;
+            await axios.get(`/labels/print/${fullDate}`)
 
-      case "IntentRequest":
-        switch(event.request.intent.name) {
-          case "PrintIntent":
-            if(!this.event.request.intent.slots.orderTimePeriod.value){
-            context.succeed(
-            generateResponse(
-              buildSpeechletResponse("Let me fetch your orders", true),
-              {}
-            )
-          )} else{
-            context.succeed(
-              generateResponse(
-                buildSpeechletResponse(`${this.event.request.intent.slots.orderTimePeriod.value}`, true),
-                {}
-              )
-            )
+            await getShipmentsCount(axios, fullDate)
+            .then(resp => 
+              say(context, `I have sent ${resp.data} label${parseInt(resp.data) > 1 ? 's' : ''} to the printer`))
+            .catch(err => 
+              say(context, `I'm sorry, I could not connect to the server`))
+            break;
+  
+            case "PrintByDateIntent":
+              let date = event.request.intent.slots.timePeriod.value
+  
+              await axios.get(`/labels/print/${date}`)
+  
+              await getShipmentsCount(axios, date)
+              .then(resp => 
+                say(context, `I have sent ${resp.data} label${parseInt(resp.data) > 1 ? 's' : ''} to the printer`))
+              .catch(err => 
+                say(context, `I'm sorry, I could not connect to the server`))
+              break;
+
+              case "OrderCountIntent": console.log('OrderCountIntent')
+
+              date = event.request.intent.slots.timePeriod.value
+  
+              await getShipmentsCount(axios, date)
+              .then(resp => 
+                say(context, `You have ${resp.data} order${parseInt(resp.data) > 1 ? 's' : ''} for ${date = fullDate ? 'today' : 'that day'}`))
+              .catch(err => 
+                say(context, `I'm sorry, I could not connect to the server`))
+              break;
+  
+            default:
+              throw "Invalid intent"
           }
-          break;
-            
-          default:
-            throw "Invalid intent"
-        }
+  
+        default:
+          context.fail(`INVALID REQUEST TYPE: ${event.request.type}`)
+        
+      }
 
-        break;
-
-      case "SessionEndedRequest":
-        break;
-
-      default:
-        context.fail(`INVALID REQUEST TYPE: ${event.request.type}`)
-
-    }
-    })
-
+    }).catch(err => say(context, "There was a problem connecting to the response server"))
   } catch(error) { context.fail(`Exception: ${error}`) }
 
 }
@@ -82,5 +102,9 @@ const generateResponse = (speechletResponse, sessionAttributes) => {
     sessionAttributes: sessionAttributes,
     response: speechletResponse
   }
-
 }
+
+
+
+
+

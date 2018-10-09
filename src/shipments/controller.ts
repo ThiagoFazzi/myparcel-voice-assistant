@@ -1,5 +1,4 @@
 import Axios from 'axios'
-import * as request from 'superagent'
 import { Credential } from './credential';
 
 import { 
@@ -21,134 +20,53 @@ const AxiosAuth = async () => Axios.create({
   }
 })
 
-export const getAccessToken = (credentialKeys: Credential) => {
-  request
-    .post(BASE_URL_AUTH)
-    .send(credentialKeys)
-    .set('Content-Type', 'application/json')
-    .then(result => getShipments(result.body))
+export const getShipments = (axios, date) => {
+  return axios
+    .get(`${BASE_URL}/shipments?filter[search]=2018-10-05&include=shipment_status`)
+    .then(response =>  response.data)
     .catch(err => console.error(err))
 }
 
-/*
-1. Fetch shipments for today: 
-    GET https://sandbox-api.myparcel.com/v1/shipments?filter[search]=2018-10-01&include=shipment_status 
-    (I just noticed we do not currently offer a way of filtering shipments by status, so you'll have to 
-    do that filtering on your side)
-*/
-export const getShipments2 = (axios) => {
-  axios
-    .get(`${BASE_URL}/shipments?filter[search]=2018-10-01&include=shipment_status`)
-    .then(result => {
-      result.data
-        .map(shipment => registerShipment)
-    })
-    .catch(err => console.error(err))
-
-}
-
-export const getShipments = (token) => {
-  request
-    .get(`${BASE_URL}/shipments?filter[search]=2018-10-01&include=shipment_status`)
-    .set('Authorization', `${token.token_type} ${token.access_token}`)
-    .set('Content-Type', 'application/vnd.api+json')
-    .then(result => {
-      result.body.data
-        .map(shipment => registerShipment(shipment.id, shipment, token))
-    })
-    .catch(err => console.error(err))
-}
-
-/*
-2. Register the shipment with the carrier: 
-PATCH https://sandbox-api.myparcel.com/v1/shipments/{shipment_id} 
-(To register with the carrier, patch the `register_at` property to `0`
-*/
-export const registerShipment = (shipmentId, shipment, token) => {
+export const registerShipment = (axios, shipment) => {
   shipment.attributes.register_at = 0
   const ship = {
     data: shipment
   }
-  request
-    .patch(`${BASE_URL}/shipments/${shipmentId}`)
-    .set('Authorization', `${token.token_type} ${token.access_token}`)
-    .set('Content-Type', 'application/vnd.api+json')
-    .send(ship)
-    .then(result => getFile(result.body.data.id, token))
+  return axios
+    .patch(`${BASE_URL}/shipments/${shipment.id}`,ship)
+    .then(response =>  response.data)
     .catch(err => console.error(err))
 }
 
-/*
-3. Retrieve files related to the shipment:
-  GET https://sandbox-api.myparcel.com/v1/shipments/{shipment_id}/files
-*/
-export const getFile = (shipmentId, token) => {
-  request
-    .get(`${BASE_URL}/shipments/${shipmentId}/files`)
-    .set('Authorization', `${token.token_type} ${token.access_token}`)
-    .set('Content-Type', 'application/vnd.api+json')
-    .then(result => {
-      result.body.data
-        .map(file => getContent(file.id, token))
-    })
+export const getFile = (axios, shipment) => {
+  return axios
+    .get(`${BASE_URL}/shipments/${shipment}/files`)
+    .then(response =>  response.data)
     .catch(err => console.error(err))
 }
 
-/*
-4. Retrieve the contents of the file: 
-  https://sandbox-api.myparcel.com/v1/files/{file_id} 
-  (With `Accept` header set to `application/pdf`
-*/
-export const getContent = (fileId, token) => {
-  Axios.get(`${BASE_URL}/files/${fileId}`, {
-    responseType: 'arraybuffer',
+export const getContent = (axios, fileId) => {
+  return axios.get(`${BASE_URL}/files/${fileId}`, {
     headers: {
-      Authorization: `${token.token_type} ${token.access_token}`,
-      //ContentType: 'application/pdf',
       Accept: 'application/pdf',
+      ContentType: 'application/pdf' 
     }
-  }).then(response => {
-    //console.log(response.data)
-    //printStreamPDF(Buffer.from(response.data, 'base64'))
-
-
-  }).catch(err => {
-    console.log(err)
   })
-  /*//request
-  //    .get(`${baseUrlFile}/files/${fileId}`)
-  //    .set('Authorization', `${token.token_type} ${token.access_token}`)
-  //    //.set('Content-Type', 'application/pdf')
-  //    .set('Accept', 'application/pdf')
-      .responseType('pdf')
-      //.buffer(true)
-      //.then(result => console.log(result.body))
-      .then(result => { console.log(result.body) })
-      .catch(err => console.error(err))*/
+    .then(response => { printPDFBuffer(Buffer.from(response.data, 'base64'))})
+    .catch(err => console.log(err))
 }
 
 
+AxiosAuth().then(async axios => {
+  let shipments = await getShipments(axios,'2018-10-5')
 
+  let ShipmentsAfterPatch = <any> await Promise.all(shipments.data.map(shipment => registerShipment(axios, shipment)))
+  
+  let ShipmentsAfterPatch1 = <any> await Promise.all(ShipmentsAfterPatch.map(x=> getFile(axios, x.data.id)))
 
-export const showFileContent = (data) => {
-  console.log(data)
-}
-
-
-
-//PDFCreator
-
-
-
-
-
-
-
-AxiosAuth().then(axios => {
+  let ShipmentsAfterPatch2 = <any> await Promise.all(ShipmentsAfterPatch1.map(y => getContent(axios, y.data[0].id)))
 
 })
-
-
 
 
 
