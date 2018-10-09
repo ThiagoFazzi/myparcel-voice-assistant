@@ -39,7 +39,7 @@
 
   You can find the full list of uttarances (things that a user may say to Alexa in order to trigger the specific intent request) under /src/utterances.txt 
 
-  You can also find the full intent schema under /src/intent-schema.txt 
+  You can also find the full intent schema under /src/intent-schema.txt.  
   It is possible to copy this straight to the JSON Editor in the interaction model of your new skill.     
 
 ### AWS Lambda
@@ -56,7 +56,7 @@
 
   You can find the code for the lambda function in the /myParcel/index.js file. Note the build.sh file in our root directory - this is used to push the code together with all necessary dependencies to the AWS Lambda. This requires that you have AWS CLI installed and configured. You can find the instructions for this on https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-getting-started.html
 
-  Once you have AWS CLI configures you can run 
+  Once you have AWS CLI configured you can run 
 
   $ bash build.sh yourLambdaFunctionName
 
