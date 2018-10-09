@@ -1,13 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-<<<<<<< HEAD
-require('./shipments/controller');
-=======
 const controller_1 = require("./shipments/controller");
 const credential_1 = require("./shipments/credential");
 
 
->>>>>>> 596b771e782ba3fadde048ea05bc16c983154b11
 exports.handler = (event, context) => {
     try {
         if (event.session.new) {
