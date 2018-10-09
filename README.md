@@ -9,17 +9,12 @@
 ## Table of Contents
 
  - [ Alexa Skill](#alexa-skill)
-
   - [ Intents and Utterances](#intents-and-utterances)
-
   - [ AWS Lambda](#aws-lambda)
 
 - [Raspberry Pi](#raspberry-pi)
-
   - [Web Server](#web-server)
-
   - [Print Server](#print-server)
-
   - [Tunnel](#tunnel)
 
 ## Alexa Skill
