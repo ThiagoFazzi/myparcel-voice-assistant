@@ -8,7 +8,7 @@
 
 ## Table of Contents
 
-[ *Alexa Skill](#alexa-skill)
+ - [ Alexa Skill](#alexa-skill)
 
   [ Intents and Utterances](#intents-and-utterances)
 
