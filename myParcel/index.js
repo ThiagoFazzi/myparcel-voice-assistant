@@ -2,7 +2,7 @@ const {AxiosAuth, BASE_URL} = require("./constants")
 const {printPDFBuffer, print} = require('./lib/printer')
 const Axios = require('axios')
 
-const PI_HOST = 'https://c377c715.ngrok.io' || 'http://c377c715.ngrok.io'
+const PI_HOST = 'https://3119c166.ngrok.io' || 'http://c377c715.ngrok.io'
 
 const PiServer = async () => Axios.create({
   baseURL: PI_HOST
@@ -20,6 +20,7 @@ const getShipmentsCount = async (axios, date) => axios.get('/labels/count/' + da
 
 
 exports.handler = async (event, context) => {
+
   try {
     await PiServer().then(async axios => {
       switch (event.request.type) {
@@ -27,7 +28,7 @@ exports.handler = async (event, context) => {
         case "LaunchRequest": console.log('LaunchRequest')
           await getShipmentsCount(axios, fullDate)
             .then(resp => 
-              say(context, `Hello, welcome to My Parcel. You have ${resp.data} shipment${parseInt(resp.data) > 1 ? 's' : ''} on today's list`))
+              say(context, `Hello, welcome to MyParcel.com. You have ${resp.data} shipment${parseInt(resp.data) > 1 ? 's' : ''} on today's list`))
             .catch(err => 
               say(context, `I'm sorry, I could not connect to the server`))
           break;        
@@ -38,10 +39,6 @@ exports.handler = async (event, context) => {
             case "PrintIntent": console.log('PrintIntent')
 
             await axios.get(`/labels/print/${fullDate}`)
-            // .then(resp =>
-            //   say(context, 'Posted'))
-            // .catch(err => 
-            //   say(context, 'Not posted'))
 
             await getShipmentsCount(axios, fullDate)
             .then(resp => 
@@ -61,6 +58,17 @@ exports.handler = async (event, context) => {
               .catch(err => 
                 say(context, `I'm sorry, I could not connect to the server`))
               break;
+
+              case "OrderCountIntent": console.log('OrderCountIntent')
+
+              date = event.request.intent.slots.timePeriod.value
+  
+              await getShipmentsCount(axios, date)
+              .then(resp => 
+                say(context, `You have ${resp.data} order${parseInt(resp.data) > 1 ? 's' : ''} for ${date = fullDate ? 'today' : 'that day'}`))
+              .catch(err => 
+                say(context, `I'm sorry, I could not connect to the server`))
+              break;
   
             default:
               throw "Invalid intent"
@@ -73,6 +81,7 @@ exports.handler = async (event, context) => {
 
     }).catch(err => say(context, "There was a problem connecting to the response server"))
   } catch(error) { context.fail(`Exception: ${error}`) }
+
 }
 
 
@@ -84,6 +93,7 @@ const buildSpeechletResponse = (outputText, shouldEndSession) => {
     },
     shouldEndSession: shouldEndSession
   }
+
 }
 
 const generateResponse = (speechletResponse, sessionAttributes) => {
