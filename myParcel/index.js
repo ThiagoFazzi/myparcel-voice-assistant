@@ -10,11 +10,14 @@ const PiServer = async () => Axios.create({
 
 const say = (context, message) => context.succeed(generateResponse(buildSpeechletResponse(message, true)))
 
+
+const formatDate = (n) => { return n<10 ? '0'+n : n}
+
 let today = new Date()
 let day = today.getDate()
 let month = today.getMonth()
 let year = today.getFullYear()
-let fullDate = `${year}-${month+1}-${day}`
+let date = `${year}-${formatDate(month+1)}-${formatDate(day)}`
 
 const getShipmentsCount = async (axios, date) => axios.get('/labels/count/' + date)
 
@@ -26,7 +29,7 @@ exports.handler = async (event, context) => {
       switch (event.request.type) {
 
         case "LaunchRequest": console.log('LaunchRequest')
-          await getShipmentsCount(axios, fullDate)
+          await getShipmentsCount(axios, date)
             .then(resp => 
               say(context, `Hello, welcome to MyParcel.com. You have ${resp.data} shipment${parseInt(resp.data) > 1 ? 's' : ''} on today's list`))
             .catch(err => 
@@ -38,9 +41,9 @@ exports.handler = async (event, context) => {
           switch (event.request.intent.name) {
             case "PrintIntent": console.log('PrintIntent')
 
-            await axios.get(`/labels/print/${fullDate}`)
+            await axios.get(`/labels/print/${date}`)
 
-            await getShipmentsCount(axios, fullDate)
+            await getShipmentsCount(axios, date)
             .then(resp => 
               say(context, `I have sent ${resp.data} label${parseInt(resp.data) > 1 ? 's' : ''} to the printer`))
             .catch(err => 
@@ -48,7 +51,7 @@ exports.handler = async (event, context) => {
             break;
   
             case "PrintByDateIntent":
-              let date = event.request.intent.slots.timePeriod.value
+              date = event.request.intent.slots.timePeriod.value
   
               await axios.get(`/labels/print/${date}`)
   
@@ -59,13 +62,12 @@ exports.handler = async (event, context) => {
                 say(context, `I'm sorry, I could not connect to the server`))
               break;
 
-              case "OrderCountIntent": console.log('OrderCountIntent')
-
+            case "OrderCountIntent": console.log('OrderCountIntent')
               date = event.request.intent.slots.timePeriod.value
   
               await getShipmentsCount(axios, date)
               .then(resp => 
-                say(context, `You have ${resp.data} order${parseInt(resp.data) > 1 ? 's' : ''} for ${date = fullDate ? 'today' : 'that day'}`))
+                say(context, `You have ${resp.data} order${parseInt(resp.data) > 1 ? 's' : ''} for ${ date === `${year}-${formatDate(month+1)}-${formatDate(day)}` ? 'today' : 'that day'}`))
               .catch(err => 
                 say(context, `I'm sorry, I could not connect to the server`))
               break;
