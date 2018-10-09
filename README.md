@@ -2,19 +2,25 @@
 
 ## Introduction
 
-  The purpose of this project is to use an Alexa Echo device as a voice assistant for label printing in order to simplify every day work for small webshop owners and warehouse employees. 
+  The purpose of this project is to use an Alexa Echo device as a voice assistant for label printing in order to simplify every day work for small webshop owners and warehouse employees. It should also be an extra security layer for employers as it does not expose other parts of software such as the financial information to short-term employees. 
 
   By a simple voice command Alexa should retrieve all details neccessary for label printing from a list of today's orders and send it to a local printer, which then starts the printing process. 
 
 ## Table of Contents
 
-[ - Alexa Skill](#alexa-skill)
-  [ - Intents and Utterances](#intents-and-utterances)
-  [ - AWS Lambda](#aws-lambda)
-[ - Raspberry Pi](#raspberry-pi)
-  [ - Web Server](#web-server)
-  [ - Print Server](#print-server)
-  [ - Tunnel](#tunnel)
+[ *Alexa Skill](#alexa-skill)
+
+  [ Intents and Utterances](#intents-and-utterances)
+
+  [ AWS Lambda](#aws-lambda)
+
+[Raspberry Pi](#raspberry-pi)
+
+  [Web Server](#web-server)
+
+  [Print Server](#print-server)
+
+  [Tunnel](#tunnel)
 
 ## Alexa Skill
 
