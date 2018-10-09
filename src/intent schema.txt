@@ -1,0 +1,146 @@
+{
+    "interactionModel": {
+        "languageModel": {
+            "invocationName": "my parcel",
+            "intents": [
+                {
+                    "name": "AMAZON.FallbackIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.CancelIntent",
+                    "samples": []
+                },
+                {
+                    "name": "AMAZON.HelpIntent",
+                    "samples": [
+                        "help"
+                    ]
+                },
+                {
+                    "name": "AMAZON.StopIntent",
+                    "samples": [
+                        "stop"
+                    ]
+                },
+                {
+                    "name": "AMAZON.NavigateHomeIntent",
+                    "samples": []
+                },
+                {
+                    "name": "PrintIntent",
+                    "slots": [],
+                    "samples": [
+                        "print labels of today",
+                        "print my labels",
+                        "print my shipments",
+                        "print delivery labels",
+                        "print shipment labels",
+                        "print orders of today",
+                        "print order labels",
+                        "print my orders"
+                    ]
+                },
+                {
+                    "name": "PrintByDateIntent",
+                    "slots": [
+                        {
+                            "name": "timePeriod",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "of {timePeriod}",
+                                "orders of {timePeriod}",
+                                "print orders of {timePeriod}",
+                                "{timePeriod}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "print {timePeriod}",
+                        "print labels of {timePeriod}",
+                        "print orders of {timePeriod}",
+                        "print {timePeriod} s orders"
+                    ]
+                },
+                {
+                    "name": "OrderCountIntent",
+                    "slots": [
+                        {
+                            "name": "timePeriod",
+                            "type": "AMAZON.DATE",
+                            "samples": [
+                                "I want to know the count for {timePeriod}",
+                                "for {timePeriod}",
+                                "{timePeriod}"
+                            ]
+                        }
+                    ],
+                    "samples": [
+                        "to tell me how many orders I had on {timePeriod}",
+                        "tell me the order count for {timePeriod}",
+                        "how many orders did I have on {timePeriod}",
+                        "how many shipments where there on {timePeriod}",
+                        "tell me how many orders we had on {timePeriod}"
+                    ]
+                }
+            ],
+            "types": []
+        },
+        "dialog": {
+            "intents": [
+                {
+                    "name": "PrintByDateIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "timePeriod",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.1398780346419.570049415067"
+                            }
+                        }
+                    ]
+                },
+                {
+                    "name": "OrderCountIntent",
+                    "confirmationRequired": false,
+                    "prompts": {},
+                    "slots": [
+                        {
+                            "name": "timePeriod",
+                            "type": "AMAZON.DATE",
+                            "confirmationRequired": false,
+                            "elicitationRequired": true,
+                            "prompts": {
+                                "elicitation": "Elicit.Slot.197593766513.235972914323"
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        "prompts": [
+            {
+                "id": "Elicit.Slot.1398780346419.570049415067",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "Print orders of which day?"
+                    }
+                ]
+            },
+            {
+                "id": "Elicit.Slot.197593766513.235972914323",
+                "variations": [
+                    {
+                        "type": "PlainText",
+                        "value": "What date you want to know the order count for?"
+                    }
+                ]
+            }
+        ]
+    }
+}
