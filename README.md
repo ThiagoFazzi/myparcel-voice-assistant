@@ -23,7 +23,7 @@
 
 ### AWS Lambda
 
-## Raspberry Pie
+## Raspberry Pi
 
 ### Web Server
 
